@@ -1,4 +1,5 @@
 use rand::seq::SliceRandom;
+use zxcvbn::zxcvbn;
 
 const UPPER: &[u8] = b"ABCDEFGHJKLMNOPQRSTUVWXYZ";
 const LOWER: &[u8] = b"abcdefghijkmnopqrstuvwxyz";
@@ -39,6 +40,11 @@ pub fn process_genpass(
         password.push(*c);
     }
     password.shuffle(&mut rng);
-    println!("{}", String::from_utf8(password)?);
+    let password = String::from_utf8(password)?;
+    println!("{}", password);
+
+    // output the password strength in stderr
+    let estimate = zxcvbn(&password, &[]);
+    eprint!("Password Strength: {}", estimate.score());
     Ok(())
 }
