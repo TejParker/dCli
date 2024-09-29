@@ -1,7 +1,7 @@
 // dcli csv -i input.csv -o output.json --header -d ','
 
 use clap::Parser;
-use dcli::{process_csv, Opts, SubCommand};
+use dcli::{process_csv, process_genpass, Opts, SubCommand};
 
 fn main() -> anyhow::Result<()> {
     let opts: Opts = Opts::parse();
@@ -13,6 +13,15 @@ fn main() -> anyhow::Result<()> {
                 format!("output.{}", opts.format)
             };
             process_csv(&opts.input, output, opts.format)?;
+        }
+        SubCommand::GenPass(opts) => {
+            process_genpass(
+                opts.length,
+                opts.uppercase,
+                opts.lowercase,
+                opts.numbers,
+                opts.symbol,
+            )?;
         }
     }
     Ok(())
